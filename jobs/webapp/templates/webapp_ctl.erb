@@ -1,0 +1,27 @@
+#!/bin/bash
+
+JOB=webapp
+RUN_DIR=/var/vcap/sys/run/webapp
+LOG_DIR=/var/vcap/sys/log/webapp
+PIDFILE=$RUN_DIR/nginx.pid
+CONF_DIR=/var/vcap/jobs/$JOB/config
+NGINX=/var/vcap/packages/nginx/sbin/nginx
+APSTART=/var/vcap/sys/log/webapp/start.log
+
+case $1 in
+
+  start)
+    mkdir -p $RUN_DIR
+    mkdir -p $LOG_DIR
+
+    $NGINX -c $CONF_DIR/nginx.conf -g "pid ${PIDFILE};" >> $APSTART 2>&1
+    ;;
+
+  stop)
+    kill $(cat $PIDFILE)
+    ;;
+
+  *)
+  echo "Usage: ${JOB}_ctl {start|stop}" ;;
+esac
+exit 0

@@ -1,0 +1,16 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+echo "Extracting nginx..."
+tar xzf nginx/nginx-1.9.15.tar.gz
+
+
+echo "Building nginx..."
+(
+    cd nginx-1.9.15/
+    ./configure \
+    --prefix=${BOSH_INSTALL_TARGET} \
+    --without-http_rewrite_module
+    make
+    make install
+)
